@@ -4,9 +4,9 @@ name: Bomanai Scanner
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -20,11 +20,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Installs Boman Package and runs scan on code repository
-      - name: Installing Boman
-        run: sudo pip install boman-cli
+      # Runs a single command using the runners shell
+      - name: Install packages
+        run: sudo pip install --extra-index-url https://test.pypi.org/simple/ boman-cli-uat
       - name: Run scan
-        env:
-          APP: ${{ secrets.APP_TOKEN }}
-          USER: ${{ secrets.CUSTOMER_TOKEN }}
-        run: sudo boman-cli -a run -at be2ade3d-f945-4516-8c4d-90d00bdd798e -ct 4c21d6a7-f519-40bf-9cc2-9f5377a44230
+        run: sudo boman-cli-uat -a run -u https://qa.boman.ai -at be2ade3d-f945-4516-8c4d-90d00bdd798e -ct 4c21d6a7-f519-40bf-9cc2-9f5377a44230
+     
